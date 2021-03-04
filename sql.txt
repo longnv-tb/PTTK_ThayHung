@@ -1,0 +1,130 @@
+create table pttk_httt.thanhvien(
+	id int primary key,
+    ten varchar(255) not null,
+    tenDangNhap varchar(255) not null,
+    matKhau varchar(255) not null,
+    ngaySinh date not null,
+    gioiTinh varchar(255) not null,
+    diaChi varchar(255) not null,
+    email varchar(255) not null,
+    sdt varchar(255) not null,
+    vaiTro varchar(255) not null
+);
+
+create table pttk_httt.nhanvien(
+	id int primary key,
+    viTri varchar(255) not null,
+    foreign key(id) references pttk_httt.thanhvien(id)
+);
+
+create table pttk_httt.nhanvienrade(
+	id int primary key,
+    foreign key(id) references pttk_httt.nhanvien(id)
+);
+
+create table pttk_httt.trungtam(
+	id int primary key,
+    ten varchar(255) not null,
+    diaChi varchar(255) not null,
+    moTa varchar(255)
+);
+
+create table pttk_httt.phongthi(
+	id int primary key,
+    ten varchar(255) not null,
+    siSo int not null,
+    idTrungTam int not null,
+    foreign key (idTrungTam) references pttk_httt.trungtam(id)
+);
+
+create table pttk_httt.thisinh(
+	id int primary key,
+    foreign key (id) references pttk_httt.thanhvien(id)
+);
+
+create table pttk_httt.chungchi(
+	id int primary key,
+    tenNgoaiNgu varchar(255) not null,
+    tenChungChi varchar(255) not null, 
+    thangDiem float not null,
+    moTa varchar(255),
+    thoiHan int not null
+);
+
+create table pttk_httt.lichthi(
+	id int primary key,
+    ngayThi date not null,
+    gioThi time not null, 
+    thoiGianLamBai int not null,
+    moTa varchar(255),
+    idPhongThi int,
+    idChungChi int,
+    foreign key (idPhongThi) references pttk_httt.phongthi(id),
+    foreign key (idChungChi) references pttk_httt.chungchi(id)
+);
+
+create table pttk_httt.cauhoi(
+	id int primary key,
+    noiDung varchar(255) not null,
+    mucDo varchar(255) not null,
+    idChungChi int,
+    foreign key (idChungChi) references pttk_httt.chungchi(id)
+);
+
+create table pttk_httt.luachon(
+	id int primary key,
+    noiDung varchar(255) not null,
+    isTrue bit not null,
+    idCauHoi int,
+    foreign key (idCauHoi) references pttk_httt.cauhoi(id)
+);
+
+create table pttk_httt.dethi(
+	id int primary key auto_increment,
+    moTa varchar(255),
+    maDe varchar(255) not null,
+    idChungChi int,
+    idLichThi int,
+idNhanVienRaDe int,
+    foreign key (idChungChi) references pttk_httt.chungchi(id),
+    foreign key (idLichThi) references pttk_httt.lichthi(id),
+foreign key (idNhanVienRaDe) references pttk_httt.nhanvienrade(id)
+);
+
+create table pttk_httt.cauhoidethi(
+	id int primary key auto_increment,
+    idCauHoi int,
+    idDeThi int,
+    foreign key (idCauHoi) references pttk_httt.cauhoi(id),
+    foreign key (idDeThi) references pttk_httt.dethi(id)
+);
+
+create table pttk_httt.thisinhthi(
+	id int primary key,
+    soBaoDanh varchar(255) not null,
+    ngayDangKy date not null,
+    lePhiThi float not null,
+    idThanhVien int,
+    idDeThi int,
+    foreign key (idThanhVien) references pttk_httt.thanhvien(id),
+    foreign key (idDeThi) references pttk_httt.dethi(id)
+);
+
+create table pttk_httt.baithi(
+	id int primary key,
+    gioNop date not null,
+    idThiSinhthi int,
+    idDeThi int,
+    foreign key (idThiSinhthi) references pttk_httt.thisinhthi(id),
+    foreign key (idDeThi) references pttk_httt.dethi(id)
+);
+
+create table pttk_httt.luachoncuathisinh(
+	id int primary key,
+    idLuaChon int,
+    idCauHoiDeThi int,
+    idBaiThi int,
+    foreign key (idLuaChon) references pttk_httt.luachon(id),
+    foreign key (idCauHoiDeThi) references pttk_httt.cauhoidethi(id),
+    foreign key (idBaiThi) references pttk_httt.baithi(id)
+);
